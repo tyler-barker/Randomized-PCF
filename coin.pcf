@@ -1,0 +1,12 @@
+let coin = fn m  => 
+    	 
+	 let help = rec c => fn n => fn p
+	     => if iszero n then p else { c (- n 1) p | c (- n 1) (+ p 1) }
+	 in help m 0
+	  
+	 end
+in
+
+	coin 10
+	
+end
