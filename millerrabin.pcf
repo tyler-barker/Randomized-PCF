@@ -1,0 +1,56 @@
+let eq = fn n => fn m => iszero (- n m)
+in
+
+let power2 = 
+	fn n => let power = rec p => fn m => fn a => if iszero m then a else (p (pred m) (* 2 a))
+			in power n 1
+			end
+in
+
+let twos = rec t => fn n =>
+	if (iszero (% n 2)) then (succ (t (/ n 2))) else 0
+in
+	
+let powmodhelp = rec p => fn x => fn n => fn m => fn a => if iszero n then a else (p x (pred n) m (% (* x a) m))
+in
+
+let powmod = fn x => fn n => fn m => powmodhelp x n m 1
+in
+	
+let sloop = rec s => fn x => fn n => fn i =>
+	if (iszero i) then false else (if (eq 1 (powmod x 2 n)) then false else (if (eq (- n 1) (powmod x 2 n))
+								then true else (s (powmod x 2 n) n (pred i))))
+in
+	
+let or = fn a => fn b => if a then true else b
+	in
+	
+let miller = fn n => fn a =>
+	(let s = twos (pred n) in 
+	     (let d = / (pred n) (power2 s) in 
+	     	  (let x = powmod a d n in 
+		       (or (eq x 1) (or (eq x (pred n)) (sloop x n s))) 
+		   end) 
+	     end) 
+	end)
+in
+
+let millerrabin = fn p => let help = rec h => fn n => fn x => fn y => fn a => 
+	if iszero x then (if (miller n (+ 2 a)) then (h n y y 0) else false) 
+	else {h n (pred x) y (% (* 2 a) (- n 3)) | h n (pred x) y (% (succ (* 2 a)) (- n 3))}
+	in
+	help p 16 16 0
+	end
+in
+
+millerrabin 91
+
+end
+end
+end
+end
+end
+end
+end
+end
+end
